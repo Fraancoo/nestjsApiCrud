@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
 import { UsersService } from "./users.service";
 import { User } from "./interfaces/User";
 
@@ -15,8 +15,8 @@ export class UsersController {
     }
     
     @Get(':id')
-    getUser(@Param('id') id: string): User {
-        return this.userSerive.getUser(parseInt(id));
+    getUser(@Param('id', ParseIntPipe) id: number): User {
+        return this.userSerive.getUser(id);
     }
     
     @Post()
