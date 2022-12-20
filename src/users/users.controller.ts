@@ -1,39 +1,51 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, ParseIntPipe } from '@nestjs/common';
 import { UsersService } from "./users.service";
-import { User } from "./interfaces/User";
 
-import { createUser } from './dto/register-user.dto';
+import { createUser, editUser } from './dto';
 
 @Controller('users')
 export class UsersController {
 
-    constructor(private userSerive: UsersService) {}
+    constructor(private readonly userSerive: UsersService) {}
 
     @Get()
-    getUsers(): User[] {
-        return this.userSerive.getUsers();
+    async getUsers() {
+        const data = await this.userSerive.getUsers();
+        return {
+            status: 200,
+            data: data
+        };
     }
     
     @Get(':id')
-    getUser(@Param('id', ParseIntPipe) id: number): User {
-        return this.userSerive.getUser(id);
+    async getUser(@Param('id', ParseIntPipe) id: number) {
+        const data = await this.userSerive.getUser(id);
+        return {
+            status: 200,
+            data: data
+        };
     }
     
     @Post()
-    postUser(@Body() user : createUser): string {
-        console.log(user);
-        return "Posting user";
+    async postUser(@Body() dto : createUser) {
+        await this.userSerive.postUser(dto);
+        return {
+            status: 200,
+            data: 'User added successfully'
+        };
     }
     
     @Put(':id')
-    putUser(@Body() user : createUser, @Param('id') id): string {
-        console.log(user);
-        return  `Uptading user with ID: ${id}`;
+    async putUser(@Param('id') id, @Body() dto : editUser) {
+        await this.userSerive.putUser(id, dto);
+        return {
+            status: 200,
+            data: 'User edited successfully'
+        };
     }
     
     @Delete(':id')
-    deleteUser(@Param('id') id): string {
-        return `Deleting user with ID: ${id}`;
+    deleteUser(@Param('id') id) {
+        return this.userSerive.deleteUser(id);
     }
-    
 }

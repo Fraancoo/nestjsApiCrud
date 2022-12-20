@@ -11,7 +11,6 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    UsersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -19,18 +18,21 @@ import { UsersModule } from './users/users.module';
       username: 'root',
       password: '',
       database: 'nestjs_db_test',
-      entities: [],
+      entities: [
+        __dirname + './**/**/*entity{.ts,.js}'
+      ],
+      autoLoadEntities: true,
       synchronize: true, // Do not use in production
-  })
+    }),
+    UsersModule
 ],
-  controllers: [AppController, UsersController],
-  providers: [AppService, UsersService],
+  controllers: [
+    AppController,
+  ],
+  providers: [
+    AppService,
+  ],
 })
 export class AppModule {
   constructor(private dataSource: DataSource) {}
 }
-
-
-
-
-
